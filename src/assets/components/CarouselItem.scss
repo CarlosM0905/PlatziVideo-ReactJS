@@ -47,6 +47,12 @@
   
   .carousel-item__details--img {
     width: 20px;
+    opacity: 0.6;
+  }
+
+  .carousel-item__details--img:hover{
+    width: 25px;
+    opacity: 1;
   }
   
   .carousel-item:hover .carousel-item__details {

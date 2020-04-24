@@ -1,57 +1,66 @@
-import React, {useState, useEffect} from 'react';
-import Header from '../components/Header';
+import React from 'react';
+import { connect } from 'react-redux';
 import Search from '../components/Search';
 import Categories from '../components/Categories';
 import Carousel from '../components/Carousel';
 import CarouselItem from '../components/CarouselItem';
-import Footer from '../components/Footer';
-import useInitialState from '../hooks/useInitialState';
-
-const API = "http://localhost:3000/initialState";
+import Header from '../components/Header';
 
 import '../assets/styles/App.scss';
 
-const App = () =>{
+const App = ({ myList, trends, originals }) => {
 
-    const initialState = useInitialState(API);
-    return initialState.length ===  0 ? <h1>Loading...</h1> : (
-        <div className="App">
-            <Header />
-            <Search />
-            { initialState.myList !== undefined && initialState.myList.length > 0 &&
-                <Categories title="Mi lista">
-                    <Carousel>
-                        {
-                        initialState.myList !== undefined &&
-                        initialState.myList.map(video=>{
-                        return ( <CarouselItem key={video.id} {...video} />);
-                        })}
-                    </Carousel>
-                </Categories>
+  return (
+    <>
+      <Header />
+      <Search isHome />
+      {myList !== undefined && myList.length > 0 && (
+        <Categories title='Mi lista'>
+          <Carousel>
+            {
+              myList !== undefined &&
+                            myList.map((video) => {
+                              // eslint-disable-next-line react/jsx-props-no-spreading
+                              return (<CarouselItem key={video.id} {...video} isList={true} />);
+                            })
             }
+          </Carousel>
+        </Categories>
+      )}
 
-            <Categories title="Tendencias">
-                <Carousel>
-                    {
-                    initialState.trends !== undefined &&
-                    initialState.trends.map(video=>{
-                       return ( <CarouselItem key={video.id} {...video} />);
-                    })}
-                </Carousel>
-            </Categories>
+      <Categories title='Tendencias'>
+        <Carousel>
+          {
+            trends !== undefined &&
+                        trends.map((video) => {
+                          // eslint-disable-next-line react/jsx-props-no-spreading
+                          return (<CarouselItem key={video.id} {...video} />);
+                        })
+          }
+        </Carousel>
+      </Categories>
 
-            <Categories title="Originales de PlatziVideo">
-                <Carousel>
-                    {
-                    initialState.originals !== undefined &&
-                    initialState.originals.map(video=>{
-                       return ( <CarouselItem key={video.id} {...video} />);
-                    })}
-                </Carousel>
-            </Categories>
-            <Footer />
-        </div>
-    )
+      <Categories title='Originales de PlatziVideo'>
+        <Carousel>
+          {
+            originals !== undefined &&
+                        originals.map((video) => {
+                          // eslint-disable-next-line react/jsx-props-no-spreading
+                          return (<CarouselItem key={video.id} {...video} />);
+                        })
+          }
+        </Carousel>
+      </Categories>
+    </>
+  );
 };
 
-export default App;
+const mapStateToProps = (state) => {
+  return {
+    myList: state.myList,
+    trends: state.trends,
+    originals: state.originals,
+  };
+};
+// export default App;
+export default connect(mapStateToProps, null)(App);
